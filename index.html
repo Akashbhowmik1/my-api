@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankBros Leaderboard</title>
+
+    <!-- Font Awesome (optional icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+   <style>
+    /* =========================
+       ENHANCED BASE STYLES
+    ========================= */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    :root {
+        /* Enhanced color palette */
+        --primary: #ff6b35;
+        --primary-dark: #ff4500;
+        --primary-light: #ff8e53;
+        --secondary: #00d4aa;
+        --secondary-dark: #00b894;
+        --accent: #ffb347;
+        --accent-glow: rgba(255, 179, 71, 0.4);
+        
+        /* Neutral tones for premium feel */
+        --dark: #0a0a0a;
+        --darker: #050505;
+        --dark-card: #161616;
+        --card-surface: #202020;
+        --card-border: #2a2a2a;
+        --gray: #3a3a3a;
+        --light-gray: #666;
+        --lighter-gray: #888;
+        
+        /* Text colors */
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-tertiary: #999999;
+        
+        /* Social Colors */
+        --discord: #5865F2;
+        --twitter: #1DA1F2;
+        --kick: #53FC18;
+        
+        /* Gradients */
+        --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, #00b4d8 100%);
+        --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
+        --gradient-silver: linear-gradient(135deg, #c0c0c0 0%, #808080 100%);
+        --gradient-bronze: linear-gradient(135deg, #cd7f32 0%, #a0522d 100%);
+        --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+        --gradient-social: linear-gradient(135deg, var(--discord) 0%, var(--twitter) 50%, var(--kick) 100%);
+        
+        /* Shadows & Effects */
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
+        --glow-primary: 0 0 40px rgba(255, 107, 53, 0.3);
+        --glow-secondary: 0 0 40px rgba(0, 212, 170, 0.3);
+        --border-glow: 0 0 15px rgba(255, 107, 53, 0.3);
+        
+        /* Typography */
+        --font-heading: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+        background: var(--darker);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: var(--font-body);
+        line-height: 1.6;
+        letter-spacing: 0.01em;
+    }
+
+    /* Enhanced Fire Background */
+    .fire-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        background: radial-gradient(ellipse at bottom, #1a0000 0%, var(--darker) 70%);
+        overflow: hidden;
+    }
+
+    .flame {
+        position: absolute;
+        bottom: -100px;
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle at 30% 30%, 
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 250, 205, 0.8) 10%,
+            rgba(255, 165, 0, 0.7) 30%,
+            rgba(255, 69, 0, 0.6) 50%,
+            transparent 80%
+        );
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        transform: rotate(-45deg);
+        animation: flameUp 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        filter: blur(8px) brightness(1.2);
+        opacity: 0;
+    }
+
+    @keyframes flameUp {
+        0% {
+            transform: translateY(0) rotate(-45deg) scale(0.8);
+            opacity: 0;
+        }
+        20% {
+            opacity: 0.8;
+        }
+        80% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(-100vh) rotate(-45deg) scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    /* Enhanced Header */
+    .header {
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 1.2rem 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .logo-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 1.8rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+        font-size: 2rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg);
+            filter: brightness(1);
+        }
+        50% { 
+            transform: scale(1.1) rotate(5deg);
+            filter: brightness(1.3);
+        }
+    }
+
+    .prize-pool {
+        text-align: left;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+    }
+
+    .prize-pool span {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Social Links */
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-left: 1rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+
+    .social-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: currentColor;
+        opacity: 0.2;
+        z-index: -1;
+    }
+
+    .social-link:hover {
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        border-color: currentColor;
+    }
+
+    .social-link.discord { color: var(--discord); }
+    .social-link.twitter { color: var(--twitter); }
+    .social-link.kick { color: var(--kick); }
+
+    .rewards-button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        background: var(--gradient-secondary);
+        color: #000;
+        cursor: pointer;
+        box-shadow: var(--shadow-sm), 0 0 20px rgba(0, 212, 170, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rewards-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .rewards-button:hover::before {
+        left: 100%;
+    }
+
+    .rewards-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md), 0 0 30px rgba(0, 212, 170, 0.4);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        max-width: 1200px;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1;
+        min-width: 200px;
+        max-width: 300px;
+        padding: 1.5rem;
+        background: rgba(22, 22, 22, 0.8);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .stat-label {
+        color: var(--text-tertiary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Enhanced Timer */
+    .timer-wrapper {
+        display: flex;
+        justify-content: center;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .global-timer {
+        padding: 1rem 2rem;
+        border-radius: 20px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--text-primary);
+        background: rgba(22, 22, 22, 0.9);
+        border: 1px solid rgba(255, 107, 53, 0.3);
+        box-shadow: 
+            var(--shadow-lg),
+            inset 0 0 20px rgba(255, 107, 53, 0.1),
+            0 0 0 1px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        min-width: 280px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .global-timer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .global-timer:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            var(--shadow-lg),
+            inset 0 0 30px rgba(255, 107, 53, 0.15),
+            0 0 0 1px rgba(255, 107, 53, 0.4);
+    }
+
+    /* Enhanced Leaderboard Section */
+    .leaderboard-section {
+        margin: 2rem auto;
+        padding: 0 1rem;
+        max-width: 1200px;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        padding-bottom: 0.5rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+    }
+
+    .leaderboard-table {
+        background: var(--dark-card);
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: var(--shadow-lg);
+        position: relative;
+    }
+
+    .leaderboard-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .table-header {
+        display: grid;
+        grid-template-columns: 80px 1fr 120px 120px 100px;
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.4);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .leaderboard-row {
+        display: grid;
+        grid-template-columns: 80px 1fr 120px 120px 100px;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideIn 0.5s ease forwards;
+        animation-delay: calc(0.05s * var(--row-index, 0));
+        opacity: 0;
+        transform: translateY(10px);
+        position: relative;
+        
+    }
+
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .leaderboard-row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--gradient-card);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .leaderboard-row:hover {
+        /* background: rgba(255, 107, 53, 0.05); */
+        transform: translateY(-2px);
+    }
+
+    .leaderboard-row:hover::before {
+        opacity: 0;
+    }
+
+    .leaderboard-row:last-child {
+        border-bottom: none;
+    }
+
+    /* Enhanced Rank Styles */
+    .rank {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 1.4rem;
+        font-weight: 800;
+    }
+
+    .rank-1 {
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .rank-2 {
+        background: var(--gradient-silver);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .rank-3 {
+        background: var(--gradient-bronze);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .rank-4, .rank-5, .rank-6, .rank-7, .rank-8, .rank-9, .rank-10 {
+        color: var(--text-primary);
+        font-weight: 700;
+    }
+
+    .rank-icon {
+        font-size: 1.6rem;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    /* Enhanced User Info */
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #000;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .user-avatar::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .user-avatar:hover::after {
+        opacity: 1;
+    }
+
+    .user-avatar:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .user-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+    }
+
+    .user-id {
+        color: var(--text-tertiary);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Enhanced Wager & Prize */
+    .wager, .prize {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .wager {
+        color: var(--accent);
+        text-shadow: 0 0 10px rgba(255, 179, 71, 0.3);
+    }
+
+    .wager-label {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        font-weight: 500;
+        margin-top: 0.2rem;
+    }
+
+    .prize {
+        color: var(--secondary);
+        text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
+    }
+
+    .prize-label {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        font-weight: 500;
+        margin-top: 0.2rem;
+    }
+
+    /* Live Status */
+    .live-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary);
+        font-size: 0.9rem;
+    }
+
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--secondary);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    /* Enhanced Claim Button */
+    .claim-wrapper {
+        display: flex;
+        justify-content: center;
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    .claim-button {
+        padding: 1.2rem 3rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 16px;
+        background: var(--gradient-primary);
+        color: #000;
+        cursor: pointer;
+        box-shadow: var(--shadow-lg), 0 0 40px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .claim-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: 0.5s;
+    }
+
+    .claim-button:hover::before {
+        left: 100%;
+    }
+
+    .claim-button:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: var(--shadow-lg), 0 0 60px rgba(255, 107, 53, 0.6);
+    }
+
+    .claim-button:active {
+        transform: translateY(-1px) scale(1);
+    }
+
+    /* Enhanced Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: var(--dark-card);
+        margin: 10vh auto;
+        padding: 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 90%;
+        max-width: 500px;
+        border-radius: 24px;
+        box-shadow: var(--shadow-lg), 0 0 50px rgba(255, 107, 53, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .modal-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+    }
+
+    .close {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        color: var(--text-tertiary);
+        font-size: 2rem;
+        font-weight: 300;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .close:hover {
+        color: var(--primary);
+        background: rgba(255, 107, 53, 0.1);
+        transform: rotate(90deg);
+    }
+
+    #rewards-list {
+        list-style: none;
+        max-height: 50vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+
+    #rewards-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #rewards-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+    }
+
+    #rewards-list::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 3px;
+    }
+
+    #rewards-list li {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
+
+    #rewards-list li:hover {
+        background: rgba(255, 107, 53, 0.1);
+        transform: translateX(5px);
+    }
+
+    #rewards-list li span:first-child {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    #rewards-list li span:last-child {
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        padding: 0.3rem 0.8rem;
+        border-radius: 8px;
+        background-color: rgba(255, 107, 53, 0.1);
+    }
+
+    /* Social Banner */
+    .social-banner {
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(22, 22, 22, 0.8);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        max-width: 1200px;
+        text-align: center;
+    }
+
+    .social-banner h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        background: var(--gradient-social);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .banner-social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .banner-social-link {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        min-width: 180px;
+        justify-content: center;
+        border: 2px solid transparent;
+    }
+
+    .banner-social-link:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .banner-social-link.discord {
+        background: rgba(88, 101, 242, 0.1);
+        border-color: var(--discord);
+    }
+
+    .banner-social-link.twitter {
+        background: rgba(29, 161, 242, 0.1);
+        border-color: var(--twitter);
+    }
+
+    .banner-social-link.kick {
+        background: rgba(83, 252, 24, 0.1);
+        border-color: var(--kick);
+    }
+
+    /* Enhanced Footer */
+    .footer {
+        background: rgba(10, 10, 10, 0.9);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 2rem 1rem;
+        text-align: center;
+        position: relative;
+        margin-top: 4rem;
+    }
+
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-link {
+        color: var(--text-tertiary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .footer-link:hover {
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .footer-social {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 1rem 0;
+    }
+
+    .copyright {
+        color: var(--text-tertiary);
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        margin-top: 1rem;
+    }
+
+    /* Enhanced Status Message */
+    .status-message {
+        text-align: center;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 12px;
+        background: rgba(255, 107, 53, 0.1);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 107, 53, 0.2);
+        font-size: 0.95rem;
+        animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+    }
+
+    /* Enhanced Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .header {
+            padding: 1rem;
+        }
+
+        .header-content {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            align-items: center;
+            text-align: center;
+        }
+
+        .prize-pool {
+            text-align: center;
+        }
+
+        .header-actions {
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .social-links {
+            margin-left: 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+        }
+
+        .logo-icon {
+            font-size: 1.7rem;
+        }
+
+        .rewards-button {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            grid-template-columns: 60px 1fr 100px 100px 80px;
+            padding: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .leaderboard-row {
+            grid-template-columns: 60px 1fr 100px 100px 80px;
+            padding: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .user-name {
+            font-size: 1rem;
+        }
+
+        .user-id {
+            font-size: 0.8rem;
+        }
+
+        .wager, .prize {
+            font-size: 1.1rem;
+        }
+
+        .wager-label, .prize-label {
+            font-size: 0.75rem;
+        }
+
+        .global-timer {
+            font-size: 1.1rem;
+            padding: 0.9rem 1.5rem;
+            min-width: 250px;
+        }
+
+        .claim-button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        .modal-content {
+            margin: 5vh auto;
+            padding: 1.5rem;
+            width: 95%;
+        }
+
+        #rewards-list li {
+            padding: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .stats-bar {
+            gap: 1rem;
+        }
+
+        .stat-card {
+            min-width: 150px;
+            padding: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+        }
+
+        .banner-social-links {
+            gap: 1rem;
+        }
+
+        .banner-social-link {
+            min-width: 150px;
+            padding: 0.8rem 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .table-header {
+            grid-template-columns: 50px 1fr 80px 80px 70px;
+            padding: 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        .leaderboard-row {
+            grid-template-columns: 50px 1fr 80px 80px 70px;
+            padding: 0.8rem;
+        }
+
+        .rank {
+            font-size: 1.2rem;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+        }
+
+        .user-id {
+            font-size: 0.75rem;
+        }
+
+        .wager, .prize {
+            font-size: 1rem;
+        }
+
+        .global-timer {
+            font-size: 1rem;
+            padding: 0.8rem 1.2rem;
+            min-width: 200px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+        }
+
+        .flame {
+            width: 50px;
+            height: 50px;
+            filter: blur(5px);
+        }
+
+        .banner-social-links {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .banner-social-link {
+            width: 100%;
+            max-width: 250px;
+        }
+    }
+
+    /* Enhanced Typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    p {
+        margin-bottom: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Enhanced Loading States */
+    .loading {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* Enhanced Selection */
+    ::selection {
+        background: var(--primary);
+        color: #000;
+    }
+
+    /* Enhanced Focus States */
+    :focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* Enhanced Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-light);
+    }
+
+    /* Enhanced Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    
+</style>
+</head>
+<body>
+
+    <!-- FIRE BACKGROUND -->
+    <div class="fire-background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-crown logo-icon"></i>
+                    BankBros
+                </div>
+                <div class="prize-pool" id="prize-pool">
+                    Loading prize pool...
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="social-links">
+                    <a href="https://discord.gg/fpYxdSxdNM" class="social-link discord" target="_blank" title="Join our Discord">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                    <a href="https://x.com/The_Bankbros" class="social-link twitter" target="_blank" title="Follow on Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://kick.com/bankroll-bros" class="social-link kick" target="_blank" title="Watch on Kick">
+                        <i class="fab fa-kickstarter"></i>
+                    </a>
+                </div>
+                <button id="rewards-button" class="rewards-button">Rewards</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <i class="fas fa-users stat-icon"></i>
+            <div class="stat-value" id="total-players">0</div>
+            <div class="stat-label">Total Players</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-coins stat-icon"></i>
+            <div class="stat-value" id="total-wagered">$0</div>
+            <div class="stat-label">Total Wagered</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-trophy stat-icon"></i>
+            <div class="stat-value" id="top-prize">$800</div>
+            <div class="stat-label">Top Prize</div>
+        </div>
+    </div>
+
+    <!-- TIMER -->
+    <div class="timer-wrapper">
+        <div id="global-timer" class="global-timer">
+            ⏳ Loading timer...
+        </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <section class="leaderboard-section">
+        <h2 class="section-title">Leaderboard</h2>
+        <div class="leaderboard-table">
+            <!-- TABLE HEADER -->
+            <div class="table-header">
+                <div>Rank</div>
+                <div>Player</div>
+                <div>Wager</div>
+                <div>Prize</div>
+                <div>Status</div>
+            </div>
+            <!-- DYNAMIC ROWS INSERTED HERE -->
+        </div>
+        <div class="status-message" id="status-message"></div>
+    </section>
+
+    <!-- SOCIAL BANNER -->
+    <div class="social-banner">
+        <h3>Join the Community</h3>
+        <div class="banner-social-links">
+            <a href="https://discord.gg/bankbros" class="banner-social-link discord" target="_blank">
+                <i class="fab fa-discord"></i>
+                Discord Community
+            </a>
+            <a href="https://twitter.com/bankbros" class="banner-social-link twitter" target="_blank">
+                <i class="fab fa-twitter"></i>
+                Twitter Updates
+            </a>
+            <a href="https://kick.com/bankbros" class="banner-social-link kick" target="_blank">
+                <i class="fab fa-kickstarter"></i>
+                Live Streams
+            </a>
+        </div>
+    </div>
+
+    <!-- CLAIM BUTTON -->
+    <div class="claim-wrapper">
+        <button id="claim-button" class="claim-button">Claim Your Reward</button>
+    </div>
+
+    <!-- REWARDS MODAL -->
+    <div id="rewards-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Rewards</h2>
+            <ul id="rewards-list"></ul>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-social">
+                <a href="https://discord.gg/bankbros" class="social-link discord" target="_blank" title="Discord">
+                    <i class="fab fa-discord"></i>
+                </a>
+                <a href="https://twitter.com/bankbros" class="social-link twitter" target="_blank" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://kick.com/bankbros" class="social-link kick" target="_blank" title="Kick">
+                    <i class="fab fa-kickstarter"></i>
+                </a>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">FAQ</a>
+                <a href="#" class="footer-link">Support</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p class="copyright">&copy; 2026 BankBros. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+/* ==================================================
+   CONFIG
+================================================== */
+const API_URL = "https://shock-proxy.akashbhowmik110.workers.dev/";
+const TIMER_API = "https://global-timer.akashbhowmik110.workers.dev/";
+const PRIZES = [800, 500, 300, 200, 100, 50, 25, 15, 10];
+
+const LEADERBOARD_REFRESH_MS = 60000;
+const TIMER_RESYNC_MS = 60000;
+
+/* ==================================================
+   STATE
+================================================== */
+let users = [];
+let leaderboardInterval = null;
+let timerInterval = null;
+let syncedRemainingMs = 0;
+let eventEnded = false;
+
+/* ==================================================
+   TIMER
+================================================== */
+async function fetchGlobalTimer() {
+    try {
+        const res = await fetch(`${TIMER_API}?t=${Date.now()}`, {
+            cache: "no-store"
+        });
+
+        const data = await res.json();
+
+        syncedRemainingMs = data.remainingMs;
+        eventEnded = data.isEnded === true;
+
+        if (eventEnded) {
+            stopLeaderboard();
+            document.getElementById("global-timer").textContent =
+                "🏁 Event ended";
+            return;
+        }
+
+        startLocalCountdown();
+
+    } catch (err) {
+        console.error("Timer error:", err);
+        document.getElementById("global-timer").textContent =
+            "⛔ Timer unavailable";
+    }
+}
+
+function startLocalCountdown() {
+    if (timerInterval) clearInterval(timerInterval);
+
+    updateTimerUI();
+
+    timerInterval = setInterval(() => {
+        syncedRemainingMs -= 1000;
+
+        if (syncedRemainingMs <= 0) {
+            syncedRemainingMs = 0;
+            clearInterval(timerInterval);
+            eventEnded = true;
+            stopLeaderboard();
+            document.getElementById("global-timer").textContent =
+                "🏁 Event ended";
+            return;
+        }
+
+        updateTimerUI();
+    }, 1000);
+}
+
+function updateTimerUI() {
+    const totalSeconds = Math.floor(syncedRemainingMs / 1000);
+
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    document.getElementById("global-timer").textContent =
+        `⏳ ${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+function pad(n) {
+    return n.toString().padStart(2, "0");
+}
+
+/* ==================================================
+   LEADERBOARD
+================================================== */
+async function fetchLeaderboard() {
+    if (eventEnded) return;
+
+    const status = document.getElementById("status-message");
+    status.textContent = "Loading leaderboard...";
+
+    try {
+        const res = await fetch(`${API_URL}?t=${Date.now()}`, {
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("Invalid API response");
+
+        users = data
+            .map(u => ({
+                username: u.username || "Unknown",
+                wager: Number(u.wagerAmount || 0),
+                acquired: u.acquireTime || null,
+                isOnline: Math.random() > 0.3 // Simulate online status
+            }))
+            .sort((a, b) => b.wager - a.wager);
+
+        renderLeaderboard();
+        updateStats();
+
+        status.textContent = "";
+
+    } catch (err) {
+        console.error("Leaderboard error:", err);
+        status.textContent = "Failed to load leaderboard.";
+    }
+}
+
+function updateStats() {
+    const totalWagered = users.reduce((sum, user) => sum + user.wager, 0);
+    const totalPlayers = users.length;
+    const topPrize = PRIZES[0] || 0;
+
+    document.getElementById('total-players').textContent = totalPlayers.toLocaleString();
+    document.getElementById('total-wagered').textContent = `$${totalWagered.toLocaleString()}`;
+    document.getElementById('top-prize').textContent = `$${topPrize}`;
+    document.getElementById('prize-pool').innerHTML = `Prize Pool: <span>$${PRIZES.reduce((a, b) => a + b, 0).toLocaleString()}</span>`;
+}
+
+function renderLeaderboard() {
+    const table = document.querySelector(".leaderboard-table");
+
+    // Remove existing rows
+    table.querySelectorAll(".leaderboard-row").forEach(r => r.remove());
+
+    users.slice(0, 20).forEach((user, index) => {
+        const rank = index + 1;
+        const prize = PRIZES[index] || 0;
+
+        const row = document.createElement("div");
+        row.className = `leaderboard-row rank-${rank}`;
+        row.style.setProperty('--row-index', index);
+
+        row.innerHTML = `
+            <div class="rank">
+                ${getRankIcon(rank)} ${rank}
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    ${user.username.slice(0, 2).toUpperCase()}
+                </div>
+                <div class="user-details">
+                    <div class="user-name">${escapeHTML(user.username)}</div>
+                    <div class="user-id">${formatDate(user.acquired)}</div>
+                </div>
+            </div>
+
+            <div class="wager">
+                $${user.wager.toLocaleString()}
+                <div class="wager-label">Total Wager</div>
+            </div>
+
+            <div class="prize">
+                $${prize}
+                <div class="prize-label">Potential Prize</div>
+            </div>
+
+            <div class="live-status">
+                ${user.isOnline ? '<div class="live-dot"></div> LIVE' : '<i class="fas fa-user-clock"></i> OFFLINE'}
+            </div>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+function stopLeaderboard() {
+    if (leaderboardInterval) {
+        clearInterval(leaderboardInterval);
+        leaderboardInterval = null;
+    }
+
+    const status = document.getElementById("status-message");
+    status.textContent = "Leaderboard locked — event ended.";
+}
+
+/* ==================================================
+   HELPERS
+================================================== */
+function getRankIcon(rank) {
+    if (rank === 1) return '<i class="fas fa-crown"></i>';
+    if (rank === 2) return '<i class="fas fa-medal"></i>';
+    if (rank === 3) return '<i class="fas fa-award"></i>';
+    return '';
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return "New Player";
+    return new Date(dateStr).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[m]);
+}
+
+/* ==================================================
+   FIRE BACKGROUND GENERATION
+================================================== */
+function generateFlames() {
+    const fireBg = document.querySelector('.fire-background');
+    const numFlames = window.innerWidth < 768 ? 10 : 20;
+
+    for (let i = 0; i < numFlames; i++) {
+        const flame = document.createElement('div');
+        flame.className = 'flame';
+        flame.style.left = `${Math.random() * 100}%`;
+        flame.style.animationDuration = `${2 + Math.random() * 3}s`;
+        flame.style.animationDelay = `-${Math.random() * 4}s`;
+        flame.style.width = `${40 + Math.random() * 60}px`;
+        flame.style.height = flame.style.width;
+        flame.style.opacity = 0.4 + Math.random() * 0.4;
+        fireBg.appendChild(flame);
+    }
+}
+
+/* ==================================================
+   CLAIM BUTTON
+================================================== */
+function setupClaimButton() {
+    document.getElementById('claim-button').addEventListener('click', () => {
+        window.location.href = 'https://www.shock.com/?r=NightShift';
+    });
+}
+
+/* ==================================================
+   REWARDS MODAL
+================================================== */
+function setupRewardsModal() {
+    const modal = document.getElementById('rewards-modal');
+    const btn = document.getElementById('rewards-button');
+    const close = document.querySelector('.close');
+    const list = document.getElementById('rewards-list');
+
+    // Populate rewards list
+    for (let i = 0; i < 20; i++) {
+        const position = i + 1;
+        const prize = PRIZES[i] || 0;
+        const li = document.createElement('li');
+        li.innerHTML = `<span>Position ${position}</span><span>$${prize}</span>`;
+        list.appendChild(li);
+    }
+
+    btn.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    close.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+/* ==================================================
+   SOCIAL LINKS ENHANCEMENTS
+================================================== */
+function setupSocialLinks() {
+    // Add hover effects to all social links
+    document.querySelectorAll('.social-link').forEach(link => {
+        link.addEventListener('mouseenter', (e) => {
+            e.target.style.transform = 'translateY(-3px) scale(1.1)';
+        });
+        
+        link.addEventListener('mouseleave', (e) => {
+            e.target.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+/* ==================================================
+   INIT
+================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    generateFlames();
+    setupClaimButton();
+    setupRewardsModal();
+    setupSocialLinks();
+    fetchGlobalTimer();
+    fetchLeaderboard();
+
+    leaderboardInterval = setInterval(fetchLeaderboard, LEADERBOARD_REFRESH_MS);
+    setInterval(fetchGlobalTimer, TIMER_RESYNC_MS);
+});
+</script>
+</body>
+</html>
